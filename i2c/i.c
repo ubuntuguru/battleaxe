@@ -8,14 +8,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <sys/types.h> 
+#include <sys/types.h>
 
-int main(void){
- 
+int main(void)
+{
+
 	int file;
-	int adapter_nr = 1; /* probably dynamically determined */
+	int adapter_nr = 1;	/* probably dynamically determined */
 	char filename[20];
-	
+
 	snprintf(filename, 19, "/dev/i2c-%d", adapter_nr);
 	file = open(filename, O_RDWR);
 	if (file < 0) {
@@ -23,7 +24,7 @@ int main(void){
 		exit(1);
 	}
 
-	int addr = 0x48; /* The I2C address */
+	int addr = 0x48;	/* The I2C address */
 
 	if (ioctl(file, I2C_SLAVE, addr) < 0) {
 		/* ERROR HANDLING; you can check errno to see what went wrong */
@@ -35,7 +36,7 @@ int main(void){
 	char buf[10];
 
 	buf[0] = reg;
-	if (write(file, buf, 1) !=1) {
+	if (write(file, buf, 1) != 1) {
 		/* ERROR HANDLING: i2c transaction failed */
 	}
 
@@ -44,7 +45,7 @@ int main(void){
 		/* ERROR HANDLING: i2c transaction failed */
 	} else {
 		/* buf[0] contains the read byte */
-						printf("Channel	Data:	%u\n",buf[0]);	
-}
-return 0;
+		printf("Channel	Data:	%u\n", buf[0]);
+	}
+	return 0;
 }

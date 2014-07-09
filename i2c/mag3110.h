@@ -3,8 +3,8 @@
 
 #define MAG3110_ADDR = 0x0E
 
-int mag3110_readx(char addr);
-int mag3110_ready(char addr);
+short int mag3110_readx(char addr);
+short int mag3110_ready(char addr);
 int mag3110_readz(char addr);
 char mag3110_config(char addr);
 

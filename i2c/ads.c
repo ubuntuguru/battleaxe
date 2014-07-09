@@ -19,7 +19,7 @@ int main() {
       
   // These three bytes are written to the ADS1115 to set the config register and start a conversion 
   writeBuf[0] = 1;          // This sets the pointer register so that the following two bytes write to the config register
-  writeBuf[1] = 0b11100011;       // This sets the 8 MSBs of the config register (bits 15-8) to 11000011 0xc3 bits 14:12 100 to 111 for channel selection
+  writeBuf[1] = 0xc3;       // This sets the 8 MSBs of the config register (bits 15-8) to 11000011 0xc3 bits 14:12 100 to 111 for channel selection
   writeBuf[2] = 0x03;       // This sets the 8 LSBs of the config register (bits 7-0) to 00000011
   
   // Initialize the buffer used to read data from the ADS1115 to 0
