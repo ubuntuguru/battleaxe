@@ -2,12 +2,19 @@
 include 'UUID.php';
 
 session_start();
-if(md5($_SESSION["uid"]) != $_SESSION["hid"]){
+if(isset($_SESSION['uid']) and ($_SESSION['hid']) and md5($_SESSION["uid"]) != $_SESSION["hid"]){
 	echo '<meta http-equiv="refresh" content="0; url=/login.php" />';
 	exit();
 }
 
 	$mysqli = new mysqli("dbs.battleaxe.lobsternetworks.com", "battleaxe", "ba7713ax3", "battleaxe");
+
+##alerts format must include all 3 fields
+$_ALERTS['type'] = "danger";
+$_ALERTS['strong'] = "";
+$_ALERTS['text'] = " Dashboard Wide Notification";
+
+include "preprocessor.php";
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +54,8 @@ if(md5($_SESSION["uid"]) != $_SESSION["hid"]){
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/dashboard.php">Dashboard</a></li>
             <li><a href="/dashboard.php?q=profile">Profile</a></li>
-			<li><a href="/logout.php">Logout</a></li>
+	    <li><a href="/about.php" >About</a></li>
+	    <li><a href="/logout.php">Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -80,8 +88,23 @@ if(md5($_SESSION["uid"]) != $_SESSION["hid"]){
 		?>	
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+	<ol class="breadcrumb">
+	  <li><a href="/">Home</a></li>
+	  <li><a href="/dashboard.php">Dashboard</a></li>
+	  <li class="active">
+	<?php 
+	if(isset($_GET['q'])){
+		echo ucfirst($_GET['q']);
+	}else{
+		echo ucfirst("overview");
+	} 
+	?></li>
+	</ol>
 <?php
+	if(isset($_ALERTS)){
+		echo "<div class=\"alert alert-" . $_ALERTS['type'] . " alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span class=\"glyphicon glyphicon-remove\"></span></button><strong>" . $_ALERTS['strong'] . "</strong>" . $_ALERTS['text'] . "</div>";
+	}
+
 	if(isset($_GET["q"])){
 	$path_parts = pathinfo($_GET['q']);
 	$q  = $path_parts['basename'];

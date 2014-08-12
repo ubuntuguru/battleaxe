@@ -15,5 +15,5 @@
 
           <h2 class="sub-header">Dashboard Overview</h2>
           <div class="table-responsive">
-		<p>Insert useful charts and such.  </p>
+		<p>Welcome to the BattleAxe Dashboard.  The BattleAxe Dashboard is currently under Development and should allow basic functionality.    </p>
           </div>

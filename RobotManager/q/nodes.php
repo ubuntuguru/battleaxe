@@ -1,34 +1,3 @@
-<?php
-
-if(isset($_GET["p"]) and $_GET["p"] == "add" and isset($_POST["node"]) and strlen($_POST["node"]) > 0){
-
-$config = array(
-    "digest_alg" => "sha512",
-    "private_key_bits" => 4096,
-    "private_key_type" => OPENSSL_KEYTYPE_RSA,
-);
-// Create the private and public key
-$res = openssl_pkey_new($config);
-
-// Extract the private key from $res to $privKey
-openssl_pkey_export($res, $privKey);
-
-// Extract the public key from $res to $pubKey
-$pubKey = openssl_pkey_get_details($res);
-$pubKey = $pubKey["key"];
-
-	$uuid = UUID::v4();
-	$stmt = $mysqli->prepare("insert into nodes(`name`, `owner`, `UUID`, `pri_key`, `pub_key`) values(?, ?, ?, ?, ?)");
-	$stmt->bind_param("sssss", $_POST["node"], $_SESSION["uid"], $uuid, $privKey, $pubKey);
-	$stmt->execute();
-	$stmt->close();
-}elseif(isset($_GET["d"])){
-	$stmt = $mysqli->prepare("delete from `nodes` where uuid=?");
-	$stmt->bind_param("s", $_GET["d"]);
-	$stmt->execute();
-	$stmt->close();
-}
-?>
           <h1 class="page-header">Nodes</h1>
           <div class="row placeholders">
 			<?php 
@@ -92,20 +61,20 @@ echo "<td><a href='http://" . $ip . "/'>" . $ip . "</a></td>";
 echo "<td>" . date("Y-m-d H:m:s", Strtotime($lu)) . "</td>";
 echo "<td>" . $owner . "</td>";
 echo "<td>" . $group . "</td>";
-if($_SESSION["admin"] > 5){ $a_priv = "<a href='download.php?key=pri&uuid=$uuid'>(priv)</a>";}else{$a_priv = " ";}
-echo "<td><a href='download.php?key=pub&uuid=" . $uuid . "' >(pub)</a> $a_priv (regen)</td>";
-if($_SESSION["uid"] == $owner_id){$a_del = "<a href='dashboard.php?q=nodes&d=$uuid'>(D)</a>";}
-if($_SESSION["uid"] == $owner_id){$a_edit = "<a href='#'>(E)</a>";}
+if($_SESSION["admin"] > 5){ $a_priv = "<a href='download.php?key=pri&uuid=$uuid'><span class=\"glyphicon glyphicon-eye-close\"/></a>";}else{$a_priv = " ";}
+echo "<td><a href='download.php?key=pub&uuid=" . $uuid . "' ><span class=\"glyphicon glyphicon-eye-open\"/></a> $a_priv <a href=\"#\" ><span class=\"glyphicon glyphicon-refresh\" /></a></td>";
+if($_SESSION["uid"] == $owner_id){$a_del = "<a href='dashboard.php?q=nodes&d=$uuid'><span class=\"glyphicon glyphicon-remove-circle\"></span></a>";}
+if($_SESSION["uid"] == $owner_id){$a_edit = "<a href='#'><span class=\"glyphicon glyphicon-wrench\"></span></a>";}
 echo "<td>$a_edit $a_del</td></tr>";
 					
 				}
 				$stmt->close();
 			  ?>
 			<tr><td colspan=7>
-<form method="post" action="dashboard.php?q=nodes&p=add" >
+<form method="post" action="dashboard.php?q=nodes&action=add" >
 Node Name:
 <input type="text" name="node" />
-<input type="submit" value="Add" />
+<button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-plus-sign"/></button>
 </form>
 			</td></tr>
 			  </table>
