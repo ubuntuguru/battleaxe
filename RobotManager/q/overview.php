@@ -8,9 +8,10 @@
 				print_r($_POST);
 				echo "</pre>";
 			}
+			if(isset($_SESSION["name"])){
 			?>
 			<p>Welcome <?php echo $_SESSION["name"]; ?>!</p>
-			
+			<?php } ?>
           </div>
 
           <h2 class="sub-header">Dashboard Overview</h2>
